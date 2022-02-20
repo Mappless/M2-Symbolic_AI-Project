@@ -16,6 +16,8 @@ object Main extends App {
       lubm.Vaccines.CanSinoBio -> 0.2F
     )
   )
-  RDFDataMgr.write(new FileOutputStream("extendedLubm1.ttl"), lubm.model, Lang.TTL)
+
+  //RDFDataMgr.write(new FileOutputStream("extendedLubm1.ttl"), lubm.model, Lang.TTL)
   //lubm.model.write(new FileOutputStream("test.xml"))
+  lubm.loadOntology("file:univ-bench.owl")
 }

@@ -1,4 +1,6 @@
 import com.github.javafaker.Faker
+import org.apache.jena.assembler.ConstAssembler.ontModelSpec
+import org.apache.jena.ontology.{OntModel, OntModelSpec}
 import org.apache.jena.rdf.model.{Model, ModelFactory, Property, Resource, StmtIterator}
 
 import java.time.LocalDate
@@ -6,6 +8,11 @@ import java.time.format.DateTimeFormatter
 import scala.jdk.CollectionConverters._
 import scala.math.floor
 import scala.util.Random
+import org.apache.jena.ontology.OntClass
+import org.apache.jena.ontology.ObjectProperty
+import org.apache.jena.riot.Lang
+
+import java.io.FileOutputStream
 
 class Lubm(val dbSource: String, val syntax: String) {
   val model: Model = ModelFactory.createDefaultModel().read(dbSource, syntax)
@@ -202,6 +209,99 @@ class Lubm(val dbSource: String, val syntax: String) {
             LocalDate.now().minusDays(Random.nextInt(365 * 2))
           ).resource)
     }
+  }
+
+  def loadOntology(owlSource : String) = {
+    //if (model == null) throw new IllegalArgumentException("Model cannot be null");
+
+    // Load Ontology source
+    val NS: String = "" //owlSource + "#"
+    val ontModelSpec = OntModelSpec.OWL_MEM
+    val baseModel = ModelFactory.createOntologyModel(ontModelSpec)
+    baseModel.read(owlSource);
+
+    // TODO Add les nouvelles classes et sous classes: Vaccin, properties, Gender ...
+    // TODO Add les properties entre les classes
+    /*
+    //Person's properties object
+    val person = baseModel.getOntClass(NS + "Person")
+    val id = baseModel.createClass(NS + "Id")
+    val isOfGender = baseModel.createClass(NS + "IsOfGender")
+    val firstName = baseModel.createClass(NS + "FirstName")
+    val lastName = baseModel.createClass(NS + "LastName")
+    val address = baseModel.createClass(NS + "Address")
+    val birthDate = baseModel.createClass(NS + "BirthDate")
+    val vaccinated = baseModel.createClass(NS + "Vaccinated")
+
+    val hasId = baseModel.createObjectProperty(NS + "hasId")
+    val hasGender = baseModel.createObjectProperty(NS + "hasGender")
+    val hasFirstName = baseModel.createObjectProperty(NS + "hasFirstName")
+    val hasLastName = baseModel.createObjectProperty(NS + "hasLastName")
+    val hasAddress = baseModel.createObjectProperty(NS + "hasAddress")
+    val hasBirthDate = baseModel.createObjectProperty(NS + "hasBirthDate")
+    val hasVaccinated = baseModel.createObjectProperty(NS + "hasVaccinated")
+
+    println("hasID is null : " + hasId == null)
+
+    hasId.addDomain(person)
+    hasGender.addDomain(person)
+    hasFirstName.addDomain(person)
+    hasLastName.addDomain(person)
+    hasAddress.addDomain(person)
+    hasBirthDate.addDomain(person)
+    hasVaccinated.addDomain(person)
+
+    hasId.addRange(id)
+    hasGender.addRange(isOfGender)
+    hasFirstName.addRange(firstName)
+    hasLastName.addRange(lastName)
+    hasAddress.addRange(address)
+    hasBirthDate.addRange(birthDate)
+    hasVaccinated.addRange(vaccinated)
+
+     */
+
+    //val inf = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF, baseModel);
+    baseModel.write(new FileOutputStream("extended-univ-bench.owl"))
+
+    /*
+        val vaccine = baseModel.createClass(NS + "Vaccine")
+        val Pfizer = baseModel.createClass(NS + "Pfizer")
+        val Moderna = baseModel.createClass(NS + "Moderna")
+        val AstraZeneca = baseModel.createClass(NS + "AstraZeneca")
+        val SpoutnikV = baseModel.createClass(NS + "SpoutnikV")
+        val CanSinoBio = baseModel.createClass(NS + "CanSinoBio")
+
+        val vaccination = baseModel.createClass(NS + "Vaccination")
+
+        val gender = baseModel.createClass(NS + "Gender")
+        val male = baseModel.createClass(NS + "Male")
+        val female = baseModel.createClass(NS + "Female")
+
+     */
+
+
+
+
+
+
+    //case object Id {val property: Property = model.createProperty("http://swat.cse.lehigh.edu/onto/univ-bench.owl#id")}
+    //case object IsOfGender {val property: Property = model.createProperty("http://swat.cse.lehigh.edu/onto/univ-bench.owl#gender")}
+    //case object FirstName {val property: Property = model.createProperty("http://swat.cse.lehigh.edu/onto/univ-bench.owl#firstName")}
+    //case object LastName {val property: Property = model.createProperty("http://swat.cse.lehigh.edu/onto/univ-bench.owl#lastName")}
+    //case object Address {val property: Property = model.createProperty("http://swat.cse.lehigh.edu/onto/univ-bench.owl#address")}
+    //case object BirthDate {val property: Property = model.createProperty("http://swat.cse.lehigh.edu/onto/univ-bench.owl#birthDate")}
+    //case object Vaccinated {val property: Property = model.createProperty("http://swat.cse.lehigh.edu/onto/univ-bench.owl#vaccinated")}
+
+    //Val programme = tempModel.createClass( NS + "Programme" );
+    //Val orgEvent = tempModel.createClass( NS + "OrganizedEvent" );
+
+    //Return the ontology
+    //println(inf) // but here I println this
+
+
+
+
   }
 }
 object Lubm {
