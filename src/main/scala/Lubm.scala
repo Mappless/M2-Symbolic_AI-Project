@@ -215,13 +215,24 @@ class Lubm(val dbSource: String, val syntax: String) {
     //if (model == null) throw new IllegalArgumentException("Model cannot be null");
 
     // Load Ontology source
-    val NS: String = "" //owlSource + "#"
-    val ontModelSpec = OntModelSpec.OWL_MEM
-    val baseModel = ModelFactory.createOntologyModel(ontModelSpec)
-    baseModel.read(owlSource);
+    //val NS: String = "" //owlSource + "#"
+    val NS: String = "http://swat.cse.lehigh.edu/onto/univ-bench.owl" + "#"
+    val ontModelSpec = OntModelSpec.OWL_MEM_RULE_INF
+    val model = ModelFactory.createOntologyModel(ontModelSpec)
+    model.read(owlSource);
+    val base = model.getBaseModel();
+
 
     // TODO Add les nouvelles classes et sous classes: Vaccin, properties, Gender ...
-    // TODO Add les properties entre les classes
+    // TODO Add les properties entre les
+    loadVaccine(model, NS);
+
+
+    model.write(new FileOutputStream("extended-univ-bench.owl"))
+
+
+
+
     /*
     //Person's properties object
     val person = baseModel.getOntClass(NS + "Person")
@@ -262,15 +273,9 @@ class Lubm(val dbSource: String, val syntax: String) {
      */
 
     //val inf = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF, baseModel);
-    baseModel.write(new FileOutputStream("extended-univ-bench.owl"))
 
     /*
-        val vaccine = baseModel.createClass(NS + "Vaccine")
-        val Pfizer = baseModel.createClass(NS + "Pfizer")
-        val Moderna = baseModel.createClass(NS + "Moderna")
-        val AstraZeneca = baseModel.createClass(NS + "AstraZeneca")
-        val SpoutnikV = baseModel.createClass(NS + "SpoutnikV")
-        val CanSinoBio = baseModel.createClass(NS + "CanSinoBio")
+
 
         val vaccination = baseModel.createClass(NS + "Vaccination")
 
@@ -282,17 +287,6 @@ class Lubm(val dbSource: String, val syntax: String) {
 
 
 
-
-
-
-    //case object Id {val property: Property = model.createProperty("http://swat.cse.lehigh.edu/onto/univ-bench.owl#id")}
-    //case object IsOfGender {val property: Property = model.createProperty("http://swat.cse.lehigh.edu/onto/univ-bench.owl#gender")}
-    //case object FirstName {val property: Property = model.createProperty("http://swat.cse.lehigh.edu/onto/univ-bench.owl#firstName")}
-    //case object LastName {val property: Property = model.createProperty("http://swat.cse.lehigh.edu/onto/univ-bench.owl#lastName")}
-    //case object Address {val property: Property = model.createProperty("http://swat.cse.lehigh.edu/onto/univ-bench.owl#address")}
-    //case object BirthDate {val property: Property = model.createProperty("http://swat.cse.lehigh.edu/onto/univ-bench.owl#birthDate")}
-    //case object Vaccinated {val property: Property = model.createProperty("http://swat.cse.lehigh.edu/onto/univ-bench.owl#vaccinated")}
-
     //Val programme = tempModel.createClass( NS + "Programme" );
     //Val orgEvent = tempModel.createClass( NS + "OrganizedEvent" );
 
@@ -301,6 +295,40 @@ class Lubm(val dbSource: String, val syntax: String) {
 
 
 
+
+  }
+
+  private def loadVaccine(model : OntModel, NS : String) = {
+    // Creation Vaccine's class
+    val vaccine = model.createClass(NS + "Vaccine")
+    vaccine.addLabel("vaccine", null)
+
+    // Creation Vaccine's subClass
+    val pfizer = model.createClass(NS + "Pfizer")
+    val moderna = model.createClass(NS + "Moderna")
+    val astraZeneca = model.createClass(NS + "AstraZeneca")
+    val spoutnikV = model.createClass(NS + "SpoutnikV")
+    val canSinoBio = model.createClass(NS + "CanSinoBio")
+
+      // Add some Label to CLass
+    pfizer.addLabel("pfizer", null)
+    moderna.addLabel("moderna", null)
+    astraZeneca.addLabel("astraZeneca", null)
+    spoutnikV.addLabel("spoutnikV", null)
+    canSinoBio.addLabel("canSinoBio", null)
+      // Bind subclass of Vaccine
+    vaccine.addSubClass(pfizer)
+    vaccine.addSubClass(moderna)
+    vaccine.addSubClass(astraZeneca)
+    vaccine.addSubClass(spoutnikV)
+    vaccine.addSubClass(canSinoBio)
+
+    // Ajout de property name
+    //val hasName = model.createDatatypeProperty(NS + "name")
+    //val name = model.createOntProperty(NS + "name");
+
+    //hasName.addDomain(vaccine)
+    //vaccine.addProperty(hasName, NS + "test")
 
   }
 }
