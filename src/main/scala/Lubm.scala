@@ -225,78 +225,82 @@ class Lubm(val dbSource: String, val syntax: String) {
 
     // TODO Add les nouvelles classes et sous classes: Vaccin, properties, Gender ...
     // TODO Add les properties entre les
-    loadVaccine(model, NS);
+    loadVaccine(model, NS)
+    completPerson(model, NS)
+    createNameObject(model, NS)
+    loadGender(model, NS)
 
 
     model.write(new FileOutputStream("extended-univ-bench.owl"))
 
 
+  }
 
+  private def loadGender(model : OntModel, NS : String): Unit = {
+    val genders = model.createClass(NS + "genders")
+    genders.addLabel("genders", null)
 
-    /*
-    //Person's properties object
-    val person = baseModel.getOntClass(NS + "Person")
-    val id = baseModel.createClass(NS + "Id")
-    val isOfGender = baseModel.createClass(NS + "IsOfGender")
-    val firstName = baseModel.createClass(NS + "FirstName")
-    val lastName = baseModel.createClass(NS + "LastName")
-    val address = baseModel.createClass(NS + "Address")
-    val birthDate = baseModel.createClass(NS + "BirthDate")
-    val vaccinated = baseModel.createClass(NS + "Vaccinated")
+    val male = model.createClass(NS + "male")
+    val female = model.createClass(NS + "female")
+    male.addLabel("male", null)
+    female.addLabel("female", null)
 
-    val hasId = baseModel.createObjectProperty(NS + "hasId")
-    val hasGender = baseModel.createObjectProperty(NS + "hasGender")
-    val hasFirstName = baseModel.createObjectProperty(NS + "hasFirstName")
-    val hasLastName = baseModel.createObjectProperty(NS + "hasLastName")
-    val hasAddress = baseModel.createObjectProperty(NS + "hasAddress")
-    val hasBirthDate = baseModel.createObjectProperty(NS + "hasBirthDate")
-    val hasVaccinated = baseModel.createObjectProperty(NS + "hasVaccinated")
+    genders.addSubClass(male)
+    genders.addSubClass(female)
+  }
 
-    println("hasID is null : " + hasId == null)
+  private def completPerson(model : OntModel, NS : String): Unit = {
+    val person = model.getOntClass(NS + "Person")
 
-    hasId.addDomain(person)
-    hasGender.addDomain(person)
-    hasFirstName.addDomain(person)
-    hasLastName.addDomain(person)
-    hasAddress.addDomain(person)
-    hasBirthDate.addDomain(person)
-    hasVaccinated.addDomain(person)
-
-    hasId.addRange(id)
-    hasGender.addRange(isOfGender)
-    hasFirstName.addRange(firstName)
-    hasLastName.addRange(lastName)
-    hasAddress.addRange(address)
-    hasBirthDate.addRange(birthDate)
-    hasVaccinated.addRange(vaccinated)
-
-     */
-
-    //val inf = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF, baseModel);
+    //Create Person's properties
+    val id = model.createObjectProperty(NS + "Id")
+    val gender = model.createObjectProperty(NS + "Gender")
+    val firstName = model.createObjectProperty(NS + "FirstName")
+    val lastName = model.createObjectProperty(NS + "LastName")
+    val address = model.createObjectProperty(NS + "Address")
+    val birthDate = model.createObjectProperty(NS + "BirthDate")
+    val vaccinated = model.createObjectProperty(NS + "Vaccinated")
 
     /*
+    model.createAllValuesFromRestriction(null, id, person)
+    model.createAllValuesFromRestriction(null, gender, person)
+    model.createAllValuesFromRestriction(null, firstName, person)
+    model.createAllValuesFromRestriction(null, lastName, person)
+    model.createAllValuesFromRestriction(null, address, person)
+    model.createAllValuesFromRestriction(null, birthDate, person)
+    model.createAllValuesFromRestriction(null, vaccinated, person)
 
-
-        val vaccination = baseModel.createClass(NS + "Vaccination")
-
-        val gender = baseModel.createClass(NS + "Gender")
-        val male = baseModel.createClass(NS + "Male")
-        val female = baseModel.createClass(NS + "Female")
 
      */
+    //id.property
+    /*
+      val programme: OntClass = m.createClass(NS + "Programme")
+      val orgEvent: OntClass = m.createClass(NS + "OrganizedEvent")
 
+      val hasProgramme: ObjectProperty = m.createObjectProperty(NS + "hasProgramme")
 
-
-    //Val programme = tempModel.createClass( NS + "Programme" );
-    //Val orgEvent = tempModel.createClass( NS + "OrganizedEvent" );
-
-    //Return the ontology
-    //println(inf) // but here I println this
-
-
-
+      hasProgramme.addDomain(orgEvent)
+      body.addRange(programme)
+      body.addLabel("has programme", "en")
+     */
 
   }
+
+  private def loadVaccination(model: OntModel, NS : String): Unit = {
+    val vaccination = model.createClass(NS + "Vaccination")
+    vaccination.addLabel("vaccination", null)
+
+    val vaccineType = model.createClass(NS + "VaccineType")
+    vaccineType.addLabel("vaccineType", null)
+    val vaccinationDate = model.createClass(NS + "VaccinationDate")
+    vaccinationDate.addLabel("vaccinationDate", null)
+
+  }
+
+  private def createNameObject(model : OntModel, NS : String) = {
+    val name = model.createObjectProperty(NS + "name");
+  }
+
 
   private def loadVaccine(model : OntModel, NS : String) = {
     // Creation Vaccine's class
@@ -323,12 +327,13 @@ class Lubm(val dbSource: String, val syntax: String) {
     vaccine.addSubClass(spoutnikV)
     vaccine.addSubClass(canSinoBio)
 
-    // Ajout de property name
-    //val hasName = model.createDatatypeProperty(NS + "name")
-    //val name = model.createOntProperty(NS + "name");
+    // Ajout de property VaccineName
+    //val vaccinename = model.createObjectProperty(NS + "name");
+    //val avf = model.createAllValuesFromRestriction(null, vaccinename, vaccine)
+    //val hasName = model.createObjectProperty(NS + "name")
 
-    //hasName.addDomain(vaccine)
-    //vaccine.addProperty(hasName, NS + "test")
+    //hasName.addDomain(vaccinename)
+    //vaccine.addR(hasName, NS + "test")
 
   }
 }
