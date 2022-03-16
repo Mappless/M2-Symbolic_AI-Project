@@ -1,3 +1,5 @@
+package comsumer
+
 import com.github.javafaker.Faker
 
 class SideEffect {

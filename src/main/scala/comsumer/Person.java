@@ -1,5 +1,8 @@
 package comsumer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class Person {
     public int getId() {
         return id;
@@ -12,6 +15,11 @@ public class Person {
     private int id;
     private String sideEffectName;
     private String sideEffectCode;
+
+    public String toJson() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(this);
+    }
 
     public boolean haveSideEffect(String code) {
         return code.equals(sideEffectCode);

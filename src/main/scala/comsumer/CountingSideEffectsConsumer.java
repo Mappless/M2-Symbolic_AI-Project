@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Properties;
 
+
 public class CountingSideEffectsConsumer {
     KafkaConsumer<String, String> consumer;
     String topic = "CountingSideEffects";
