@@ -19,10 +19,6 @@ class SideEffect {
     ("Lymphadenopathy", "C0497156"),
     ("Injection site tenderness", "C0863083"))
 
-  def test(n : Int):  (String, String) = {
-    return sideEffectList(n)
-  }
-
   def getRandomSideEffect(chanceOfSE : Float): (String, String) = {
     val chanceNumber = faker.number().numberBetween(0, 100)
     if (chanceNumber >= (chanceOfSE * 100).toInt)

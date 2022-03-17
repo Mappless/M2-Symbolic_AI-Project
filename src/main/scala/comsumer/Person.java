@@ -15,6 +15,7 @@ public class Person {
     private int id;
     private String sideEffectName;
     private String sideEffectCode;
+    private int age;
 
     public String toJson() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -23,6 +24,14 @@ public class Person {
 
     public boolean haveSideEffect(String code) {
         return code.equals(sideEffectCode);
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public String getSideEffectName() {

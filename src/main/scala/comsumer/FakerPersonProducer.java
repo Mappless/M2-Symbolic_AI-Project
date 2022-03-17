@@ -11,7 +11,8 @@ import java.util.Properties;
 import java.util.concurrent.Future;
 
 public class FakerPersonProducer {
-    public static void main(String[] args) throws JsonProcessingException {
+
+    public static void main(String[] args) throws JsonProcessingException, InterruptedException {
         Faker faker = new Faker();
         SideEffect sideEffect = new SideEffect();
 
@@ -22,13 +23,20 @@ public class FakerPersonProducer {
 
         KafkaProducer<String, String> producer = new KafkaProducer(props);
         for (int i = 0; i < 1000; i++) {
+            Thread.sleep(100);
             Person person = new Person();
             person.setId(i);
             Tuple2<String, String> tuple2 = sideEffect.getRandomSideEffect(0.5f);
+            if (tuple2 == null) {
+                continue;
+            }
             person.setGetSideEffectCode(tuple2._2());
             person.setSideEffectName(tuple2._1());
+            System.out.println(person.toJson());
+            Future<RecordMetadata> topicPerson = producer.send(new ProducerRecord<String, String>("CountingSideEffects", person.toJson()));
 
-            Future<RecordMetadata> topicPerson = producer.send(new ProducerRecord<String, String>("OnlyNauseaDisplay", person.toJson()));
         }
+        producer.close();
     }
 }
+

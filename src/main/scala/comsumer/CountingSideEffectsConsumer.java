@@ -26,13 +26,15 @@ public class CountingSideEffectsConsumer {
         if (hashMap.get(person.getSideEffectCode()) == null) {
             hashMap.put(person.getSideEffectCode(), 1);
         }
-        hashMap.put(person.getSideEffectCode(), hashMap.get(person.getSideEffectCode() + 1));
+        hashMap.put(person.getSideEffectCode(), hashMap.get(person.getSideEffectCode()) + 1);
     }
 
     private void displayCount() {
+        System.out.println("+--------------------------------------------------------+");
         hashMap.forEach((k, v) -> {
-            System.out.println("For the Side effect code " + k + ", we have " + v + "case.");
+            System.out.println("For the Side effect code " + k + ", we have " + v + " case.");
         });
+        System.out.println("+--------------------------------------------------------+");
     }
 
     public void run() {

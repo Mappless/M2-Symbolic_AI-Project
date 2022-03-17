@@ -22,13 +22,16 @@ public class OnlyNauseaDisplayConsumer {
 
     public void run() {
         ObjectMapper mapper = new ObjectMapper();
+        int nbNausea = 0;
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
             for (ConsumerRecord<String, String> record : records) {
                 try {
                     Person person = mapper.readValue(record.value(), Person.class);
                     if (person.haveSideEffect("C0027497")) {
+                        nbNausea++;
                         System.out.println("We have a Nausea Side Effect for the ID person : " + person.getId());
+                        System.out.println("There is " + nbNausea + " who have nausea side effect");
                     }
                 } catch (JsonProcessingException e) {
                     System.err.println("Error read JSON file.");
