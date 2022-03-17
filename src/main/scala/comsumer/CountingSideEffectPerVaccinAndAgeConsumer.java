@@ -14,7 +14,11 @@ import java.util.*;
 public class CountingSideEffectPerVaccinAndAgeConsumer {
     String topic = "CountingSideEffectPerVaccinAndAge";
     List<KafkaConsumer<String, String>> listKafkaConsumer = new ArrayList();
-    HashMap<String, Integer> hashMap = new HashMap<>(); // Key : Side Effect Code, Value : count
+    HashMap<Integer, HashMap<String, Integer>> hashMap = new HashMap<>(); // Age , // Key : Side Effect Code, Value : count
+
+    private int ageScore(int age) {
+        return age / 10;
+    }
 
     public CountingSideEffectPerVaccinAndAgeConsumer(Properties props) {
         for (int i = 0; i < 13; i++) {
@@ -27,10 +31,16 @@ public class CountingSideEffectPerVaccinAndAgeConsumer {
 
     private void treatement(Person person) {
         synchronized (this) {
-            if (hashMap.get(person.getSideEffectCode()) == null) {
-                hashMap.put(person.getSideEffectCode(), 1);
+            if (hashMap.get(ageScore(person.getAge())) == null) {
+                HashMap<String, Integer> hashMapPerAge = new HashMap<>();
+                hashMap.put(ageScore(person.getAge()), hashMapPerAge);
             }
-            hashMap.put(person.getSideEffectCode(), hashMap.get(person.getSideEffectCode()) + 1);
+
+            if (hashMap.get(ageScore(person.getAge())).get(person.getSideEffectCode()) == null) {
+                hashMap.get(ageScore(person.getAge())).put(person.getSideEffectCode(), 1);
+            } else {
+                hashMap.get(ageScore(person.getAge())).put(person.getSideEffectCode(), hashMap.get(ageScore(person.getAge())).get(person.getSideEffectCode()) + 1);
+            }
         }
     }
 
@@ -38,7 +48,10 @@ public class CountingSideEffectPerVaccinAndAgeConsumer {
         synchronized (this) {
             System.out.println("+--------------------------------------------------------+");
             hashMap.forEach((k, v) -> {
-                System.out.println("For the Side effect code " + k + ", we have " + v + " case.");
+                System.out.println("For the age categorie :" + k);
+                v.forEach((vk, vv) -> {
+                    System.out.println("------ For the Side effect code " + vk + ", we have " + vv + " case.");
+                });
             });
             System.out.println("+--------------------------------------------------------+");
         }

@@ -25,8 +25,9 @@ public class CountingSideEffectsConsumer {
     private void treatement(Person person) {
         if (hashMap.get(person.getSideEffectCode()) == null) {
             hashMap.put(person.getSideEffectCode(), 1);
+        } else {
+            hashMap.put(person.getSideEffectCode(), hashMap.get(person.getSideEffectCode()) + 1);
         }
-        hashMap.put(person.getSideEffectCode(), hashMap.get(person.getSideEffectCode()) + 1);
     }
 
     private void displayCount() {
